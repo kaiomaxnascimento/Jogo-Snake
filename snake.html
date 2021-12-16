@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Snake</title>
+    <style>
+        body {
+            text-align: center;
+        }
+
+        h1 {
+            font: bold 2.5rem Arial;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Jogo da Cobrinha</h1>
+    <canvas id="field" width="400" height="400"></canvas>
+    <h2>Pontos: <span id="ponto">0</span></h2>
+    <script type="text/javascript">
+        window.onload = function () {
+            var field = document.getElementById('field');
+            var context = field.getContext('2d');
+            var ponto = document.getElementById('ponto');
+            document.addEventListener('keydown', propriedadePush);
+            setInterval(videoGame, 70);
+
+            var pontos = 0;
+            var velocidade = 1;
+            var velocidadeX = velocidadeY = 0;
+            var cabecaX = 10;
+            var cabecaY = 15;
+            var tamanhoLargura = 20;
+            var quantidadePeca = 20;
+            var posicInicX = posicInicY = Math.floor(Math.random() * quantidadePeca);
+            var tamanhoCobra = [];
+            var calda = 5;
+
+            function videoGame() {
+                cabecaX += velocidadeX;
+                cabecaY += velocidadeY;
+                if (cabecaX < 0) {
+                    cabecaX = quantidadePeca - 1;
+                }
+                if (cabecaX > quantidadePeca - 1) {
+                    cabecaX = 0;
+                }
+                if (cabecaY < 0) {
+                    cabecaY = quantidadePeca - 1;
+                }
+                if (cabecaY > quantidadePeca - 1) {
+                    cabecaY = 0;
+                }
+
+                context.fillStyle = '#8FFF80';
+                context.fillRect(0, 0, field.width, field.height);
+
+                context.fillStyle = 'red';
+                context.fillRect(posicInicX * tamanhoLargura, posicInicY * tamanhoLargura, tamanhoLargura,
+                    tamanhoLargura);
+
+                context.fillStyle = '#804703';
+                for (var i = 0; i < tamanhoCobra.length; i++) {
+                    context.fillRect(tamanhoCobra[i].x * tamanhoLargura, tamanhoCobra[i].y * tamanhoLargura,
+                        tamanhoLargura - 2, tamanhoLargura - 2);
+                    if (tamanhoCobra[i].x == cabecaX && tamanhoCobra[i].y == cabecaY) {
+                        velicidadeX = velocidadeY = 0;
+                        ponto.innerHTML = 0;
+                        calda = 5;
+                        pontos = 0;
+
+                    }
+                }
+                tamanhoCobra.push({
+                    x: cabecaX,
+                    y: cabecaY
+                })
+                while (tamanhoCobra.length > calda) {
+                    tamanhoCobra.shift();
+
+                }
+                if (posicInicX == cabecaX && posicInicY == cabecaY) {
+                    calda++;
+                    posicInicX = Math.floor(Math.random() * quantidadePeca);
+                    posicInicY = Math.floor(Math.random() * quantidadePeca);
+
+                    ponto.innerHTML = ++pontos;
+                }
+            }
+
+            window.addEventListener('keydown', function (evento) {
+                if ([37, 38, 39, 40, 65, 87, 68, 83].indexOf(evento.keyCode) > -1) {
+                    evento.preventDefault();
+                }
+            }, false);
+
+            let lastKeyPressed = '';
+
+            function propriedadePush(evento) {
+                switch (evento.keyCode) {
+                    case 37: //37 = ceta esquerda
+                        if (lastKeyPressed != 'right') {
+                            velocidadeX = -velocidade;
+                            velocidadeY = 0;
+                            lastKeyPressed = 'left';
+                        }
+                        break;
+                    case 38: //38 = ceta cima
+                        if (lastKeyPressed != 'down') {
+                            velocidadeX = 0;
+                            velocidadeY = -velocidade;
+                            lastKeyPressed = 'up';
+                        }
+                        break;
+                    case 39: //39 = ceta direita
+                        if (lastKeyPressed != 'left') {
+                            velocidadeX = velocidade;
+                            velocidadeY = 0;
+                            lastKeyPressed = 'right';
+                        }
+                        break;
+                    case 40: //40 = ceta baixo
+                        if (lastKeyPressed != 'up') {
+                            velocidadeX = 0;
+                            velocidadeY = velocidade;
+                            lastKeyPressed = 'down'
+                        }
+                        break;
+                    case 65: //65 = tecla a
+                        if (lastKeyPressed != 'right') {
+                            velocidadeX = -velocidade;
+                            velocidadeY = 0;
+                            lastKeyPressed = 'left';
+                        }
+                        break;
+                    case 87: //87 = tecla w
+                        if (lastKeyPressed != 'down') {
+                            velocidadeX = 0;
+                            velocidadeY = -velocidade;
+                            lastKeyPressed = 'up';
+                        }
+                        break;
+                    case 68: //68 = tecla d
+                        if (lastKeyPressed != 'left') {
+                            velocidadeX = velocidade;
+                            velocidadeY = 0;
+                            lastKeyPressed = 'right';
+                        }
+                        break;
+                    case 83: //83 = tecla s
+                        if (lastKeyPressed != 'up') {
+                            velocidadeX = 0;
+                            velocidadeY = velocidade;
+                            lastKeyPressed = 'down'
+                            break;
+                        }
+                }
+
+            }
+        }
+    </script>
+</body>
+
+</html>
